@@ -83,3 +83,16 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+*.iml
+/local.properties
+/gradlew
+/gradlew.bat
+/gradle-wrapper.jar
+/gradle-wrapper.properties
+/app/app.iml
+/build
+/.metadata
+
+/.gradle/
+/.idea/
