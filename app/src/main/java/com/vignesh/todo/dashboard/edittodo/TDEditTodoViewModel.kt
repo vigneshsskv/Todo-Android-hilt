@@ -1,5 +1,6 @@
 package com.vignesh.todo.dashboard.edittodo
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,32 +15,52 @@ import javax.inject.Inject
 @HiltViewModel
 class TDEditTodoViewModel @Inject constructor(private val repository: TDRepositoryImpl<TDTodoData>) :
     ViewModel() {
-    val revert by lazy {
+    private val _revert by lazy {
         MutableLiveData<Boolean>()
     }
-    val saveOrEdit by lazy {
+    val revert: LiveData<Boolean> = _revert
+
+    private val _saveOrEdit by lazy {
         SingleLiveEvent<Boolean>()
     }
-    val errorNameHandle by lazy {
-        MutableLiveData<String>()
-    }
-    val errorDescriptionHandle by lazy {
-        MutableLiveData<String>()
-    }
-    val errorCategoryHandle by lazy {
-        MutableLiveData<String>()
-    }
-    val errorStatusHandle by lazy {
-        MutableLiveData<String>()
-    }
-    val errorReminderTypeHandle by lazy {
-        MutableLiveData<String>()
-    }
-    val errorReminderTimeHandle by lazy {
-        MutableLiveData<String>()
-    }
+    val saveOrEdit: LiveData<Boolean> = _saveOrEdit
 
-    private var editTodoData: TDTodoData? = null
+    private val _errorNameHandle by lazy {
+        MutableLiveData<String>()
+    }
+    val errorNameHandle: LiveData<String> = _errorNameHandle
+
+    private val _errorDescriptionHandle by lazy {
+        MutableLiveData<String>()
+    }
+    val errorDescriptionHandle: LiveData<String> = _errorDescriptionHandle
+
+    private val _errorCategoryHandle by lazy {
+        MutableLiveData<String>()
+    }
+    val errorCategoryHandle: LiveData<String> = _errorCategoryHandle
+
+    private val _errorStatusHandle by lazy {
+        MutableLiveData<String>()
+    }
+    val errorStatusHandle: LiveData<String> = _errorStatusHandle
+
+    private val _errorReminderTypeHandle by lazy {
+        MutableLiveData<String>()
+    }
+    val errorReminderTypeHandle: LiveData<String> = _errorReminderTypeHandle
+
+    private val _errorReminderTimeHandle by lazy {
+        MutableLiveData<String>()
+    }
+    val errorReminderTimeHandle: LiveData<String> = _errorReminderTimeHandle
+
+    private val _errorNotEditTodoHandle by lazy {
+        SingleLiveEvent<Boolean>()
+    }
+    val errorNotEditTodoHandle: LiveData<Boolean> = _errorNotEditTodoHandle
+
+    var editTodoData: TDTodoData? = null
     var name: String? = ""
     var description: String? = ""
     var category: String? = ""
@@ -57,38 +78,13 @@ class TDEditTodoViewModel @Inject constructor(private val repository: TDReposito
     fun revertEditedChange() {
         initTodoData(editTodoData)
         if (isEditTodo) {
-            revert.value = false
+            _revert.value = false
         }
     }
 
     fun checkForChanges() {
-        revert.value = isChangeMade()
+        _revert.value = isChangeMade()
         validateField()
-    }
-
-    private fun isChangeMade() = (checkMade(name, editTodoData?.name)
-            || checkMade(description, editTodoData?.description)
-            || checkMade(category, editTodoData?.category)
-            || checkMade(status, editTodoData?.status)
-            || checkMade(reminder, editTodoData?.reminder)
-            || checkMade(reminderTime, editTodoData?.reminderTime))
-
-    private fun validateField(): Boolean {
-        val emptyNameCheck = emptyCheck(name, errorNameHandle)
-        val emptyDescriptionCheck = emptyCheck(description, errorDescriptionHandle)
-        val emptyCategoryCheck = emptyCheck(category, errorCategoryHandle)
-        val emptyStatusCheck = emptyCheck(status, errorStatusHandle)
-        val emptyReminderCheck = emptyCheck(reminder, errorReminderTypeHandle)
-        val emptyReminderTimeCheck = emptyCheck(reminderTime, errorReminderTimeHandle)
-        return emptyNameCheck && emptyDescriptionCheck && emptyCategoryCheck && emptyStatusCheck && emptyReminderCheck && emptyReminderTimeCheck
-    }
-
-    private fun checkMade(oldValue: String?, newValue: String?) = oldValue != newValue
-
-    private fun emptyCheck(value: String?, event: MutableLiveData<String>): Boolean {
-        val result = value == null || value.trim().isEmpty()
-        event.value = if (result) "Can't be empty" else null
-        return !result
     }
 
     fun saveOrUpdateTodo() {
@@ -132,6 +128,31 @@ class TDEditTodoViewModel @Inject constructor(private val repository: TDReposito
         }
     }
 
+    private fun isChangeMade() = (TDEditTodoUtils.checkMade(name, editTodoData?.name)
+            || TDEditTodoUtils.checkMade(description, editTodoData?.description)
+            || TDEditTodoUtils.checkMade(category, editTodoData?.category)
+            || TDEditTodoUtils.checkMade(status, editTodoData?.status)
+            || TDEditTodoUtils.checkMade(reminder, editTodoData?.reminder)
+            || TDEditTodoUtils.checkMade(reminderTime, editTodoData?.reminderTime)).also {
+        _errorNotEditTodoHandle.value = it
+    }
+
+    private fun validateField(): Boolean {
+        val emptyNameCheck = emptyCheck(name, _errorNameHandle)
+        val emptyDescriptionCheck = emptyCheck(description, _errorDescriptionHandle)
+        val emptyCategoryCheck = emptyCheck(category, _errorCategoryHandle)
+        val emptyStatusCheck = emptyCheck(status, _errorStatusHandle)
+        val emptyReminderCheck = emptyCheck(reminder, _errorReminderTypeHandle)
+        val emptyReminderTimeCheck = emptyCheck(reminderTime, _errorReminderTimeHandle)
+        return emptyNameCheck && emptyDescriptionCheck && emptyCategoryCheck && emptyStatusCheck && emptyReminderCheck && emptyReminderTimeCheck
+    }
+
+    private fun emptyCheck(value: String?, event: MutableLiveData<String>): Boolean {
+        val result = TDEditTodoUtils.emptyCheck(value)
+        event.value = if (result) "Can't be empty" else null
+        return !result
+    }
+
     private fun initTodoData(data: TDTodoData?) {
         data.let {
             name = it?.name ?: ""
@@ -148,20 +169,20 @@ class TDEditTodoViewModel @Inject constructor(private val repository: TDReposito
         viewModelScope.launch {
             repository.insert(todo)
         }
-        saveOrEdit.value = true
+        _saveOrEdit.value = true
     }
 
     private fun editTodo(todo: TDTodoData) {
         viewModelScope.launch {
             repository.update(todo)
         }
-        saveOrEdit.value = true
+        _saveOrEdit.value = true
     }
 
     private fun deleteTodo(todo: TDTodoData) {
         viewModelScope.launch {
             repository.delete(todo)
         }
-        saveOrEdit.value = true
+        _saveOrEdit.value = true
     }
 }

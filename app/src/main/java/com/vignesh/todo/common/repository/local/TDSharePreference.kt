@@ -3,12 +3,12 @@ package com.vignesh.todo.common.repository.local
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-sealed interface LNSharePreferenceImpl {
+sealed interface TDSharePreferenceImpl {
     var autherticationToken: String?
     var refreshToken: String?
 }
 
-class LNSharePreference @Inject constructor(preference: SharedPreferences) : LNSharePreferenceImpl {
+class TDSharePreference @Inject constructor(preference: SharedPreferences) : TDSharePreferenceImpl {
     override var autherticationToken: String?
         get() = TODO("Not yet implemented")
         set(value) {}

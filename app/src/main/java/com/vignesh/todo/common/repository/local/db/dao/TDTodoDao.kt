@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.vignesh.todo.common.repository.model.TDTodoData
 
-sealed interface LN
-
 @Dao
-sealed interface LNTodoDao {
+sealed interface TDTodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTODO(todo: TDTodoData)
 

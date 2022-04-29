@@ -1,7 +1,7 @@
 package com.vignesh.todo.common.repository.network
 
 import com.google.gson.GsonBuilder
-import com.vignesh.todo.common.repository.local.LNSharePreferenceImpl
+import com.vignesh.todo.common.repository.local.TDSharePreferenceImpl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +21,7 @@ object LNApiManager {
     fun generateOkHttpClient(
         isAuthTokenNeed: Boolean = false,
         isRefreshTokenNeed: Boolean = false,
-        preference: LNSharePreferenceImpl? = null,
+        preference: TDSharePreferenceImpl? = null,
         authInterceptor: Interceptor? = null,
         additionalInterceptors: List<Interceptor>? = null,
     ) = OkHttpClient().newBuilder().apply {
@@ -48,7 +48,7 @@ object LNApiManager {
         addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
     }.build()
 
-    fun <T> buildRetrofitClient(okHttpClient: OkHttpClient, client: Class<T>) =
+    fun <T> buildRetrofitClient(okHttpClient: OkHttpClient, client: Class<T>): Class<T> =
         Retrofit.Builder().apply {
             baseUrl("")
             client(okHttpClient)
@@ -64,7 +64,7 @@ object LNApiManager {
         request: Request,
         isAuthTokenNeed: Boolean = false,
         isRefreshTokenNeed: Boolean = false,
-        preference: LNSharePreferenceImpl?,
+        preference: TDSharePreferenceImpl?,
     ) = request.newBuilder().apply {
         request.headers[KEY_ACCEPT_TYPE] ?: kotlin.run {
             addHeader(KEY_ACCEPT_TYPE, APPLICATION_JSON)

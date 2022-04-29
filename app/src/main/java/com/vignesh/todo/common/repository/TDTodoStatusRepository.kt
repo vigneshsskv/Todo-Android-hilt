@@ -12,5 +12,5 @@ class TDTodoStatusRepository @Inject constructor(private val database: TDTodoSta
 
     override suspend fun delete(data: TDTodoStatusData) = database.updateTodoStatus(data)
 
-    override fun fetch() = database.fetchTodoCategory()
+    override fun fetch() = database.fetchTodoStatus()
 }
