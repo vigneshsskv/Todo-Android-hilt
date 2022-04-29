@@ -1,13 +1,13 @@
 package com.vignesh.todo.common.repository.network
 
 import com.vignesh.todo.common.dj.LNCommonRepositoryModule
-import com.vignesh.todo.common.repository.local.LNSharePreferenceImpl
+import com.vignesh.todo.common.repository.local.TDSharePreferenceImpl
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
 class TDAuthorizationInterceptor @Inject constructor(
-    val sharePreference: LNSharePreferenceImpl,
+    val sharePreference: TDSharePreferenceImpl,
     @LNCommonRepositoryModule.RefreshTokenClient val refreshTokenClient: Class<LNApiManagerImpl>
 ) :
     Interceptor {

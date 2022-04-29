@@ -15,6 +15,6 @@ sealed interface TDTodoStatusDao {
     @Delete
     suspend fun deleteTodoStatus(todo: TDTodoStatusData)
 
-    @Query("Select * from todo_category")
-    fun fetchTodoCategory(): LiveData<List<TDTodoStatusData>>
+    @Query("Select * from todo_status")
+    fun fetchTodoStatus(): LiveData<List<TDTodoStatusData>>
 }

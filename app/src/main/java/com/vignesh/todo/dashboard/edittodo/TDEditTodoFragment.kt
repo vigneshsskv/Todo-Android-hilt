@@ -2,6 +2,7 @@ package com.vignesh.todo.dashboard.edittodo
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
@@ -140,6 +141,13 @@ class TDEditTodoFragment : TDFragment() {
                 errorStatusHandle.observe(viewLifecycleOwner, tilTodoStatus::setError)
                 errorReminderTypeHandle.observe(viewLifecycleOwner, tilTodoReminderType::setError)
                 errorReminderTimeHandle.observe(viewLifecycleOwner, tilTodoReminderTime::setError)
+                errorNotEditTodoHandle.observe(viewLifecycleOwner) {
+                    it?.let {
+                        if (it) {
+                            //Toast.makeText(this@TDEditTodoFragment,"No changes maked",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
     }

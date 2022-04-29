@@ -1,10 +1,10 @@
 package com.vignesh.todo.common.repository
 
-import com.vignesh.todo.common.repository.local.db.dao.LNTodoDao
+import com.vignesh.todo.common.repository.local.db.dao.TDTodoDao
 import com.vignesh.todo.common.repository.model.TDTodoData
 import javax.inject.Inject
 
-class TDTodoRepository @Inject constructor(private val database: LNTodoDao) :
+class TDTodoRepository @Inject constructor(private val database: TDTodoDao) :
     TDRepositoryImpl<TDTodoData>() {
     override suspend fun insert(data: TDTodoData) = database.insertTODO(data)
 

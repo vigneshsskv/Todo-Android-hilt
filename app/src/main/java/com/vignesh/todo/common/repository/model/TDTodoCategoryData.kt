@@ -8,8 +8,8 @@ import java.util.*
 data class TDTodoCategoryData(
     var name: String = "",
     var createdAt: Long = Date().time,
-    var updatedAt: Long?,
-    var deletedAt: Long?
+    var updatedAt: Long? = null,
+    var deletedAt: Long? = null,
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

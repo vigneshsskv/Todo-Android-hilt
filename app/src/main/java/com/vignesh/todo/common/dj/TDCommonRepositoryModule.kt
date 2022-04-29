@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.vignesh.todo.common.TDConstant
-import com.vignesh.todo.common.repository.local.LNSharePreference
-import com.vignesh.todo.common.repository.local.LNSharePreferenceImpl
+import com.vignesh.todo.common.repository.local.TDSharePreference
+import com.vignesh.todo.common.repository.local.TDSharePreferenceImpl
 import com.vignesh.todo.common.repository.local.db.TDDatabase
 import com.vignesh.todo.common.repository.network.LNApiManager
 import com.vignesh.todo.common.repository.network.LNApiManagerImpl
@@ -49,7 +49,7 @@ object LNCommonRepositoryModule {
     @Singleton
     @AuthorisedApiClient
     fun getRefreshTokenClient(
-        preferences: LNSharePreferenceImpl,
+        preferences: TDSharePreferenceImpl,
     ): Class<LNApiManagerImpl> =
         LNApiManager.buildRetrofitClient(
             LNApiManager.generateOkHttpClient(
@@ -63,7 +63,7 @@ object LNCommonRepositoryModule {
     @Singleton
     @AuthorisedApiClient
     fun getAuthorizationClient(
-        preferences: LNSharePreferenceImpl,
+        preferences: TDSharePreferenceImpl,
         authInterceptor: TDAuthorizationInterceptor
     ): Class<LNApiManagerImpl> =
         LNApiManager.buildRetrofitClient(
@@ -78,7 +78,7 @@ object LNCommonRepositoryModule {
     @Provides
     @Singleton
     @UnAuthorisedApiClient
-    fun getUnAuthorizationClient(preferences: LNSharePreferenceImpl): Class<LNApiManagerImpl> =
+    fun getUnAuthorizationClient(preferences: TDSharePreferenceImpl): Class<LNApiManagerImpl> =
         LNApiManager.buildRetrofitClient(
             LNApiManager.generateOkHttpClient(
                 preference = preferences
@@ -92,5 +92,5 @@ object LNCommonRepositoryModule {
 abstract class LNCommonRepositoryImpl {
     @Binds
     @Singleton
-    abstract fun getPreferenceImpl(preferences: LNSharePreference): LNSharePreferenceImpl
+    abstract fun getPreferenceImpl(preferences: TDSharePreference): TDSharePreferenceImpl
 }
